@@ -2,13 +2,19 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
-func main() {
-	handler := Handler{}
+var routes = map[string]http.Handler{
+	"/api": &Handler{},
+}
 
-	http.Handle("/api", &handler)
+func main() {
+	for path, handler := range routes {
+		http.Handle(path, handler)
+	}
+	log.Println("Server started on port 8080")
 	http.ListenAndServe(":8080", nil)
 }
 
